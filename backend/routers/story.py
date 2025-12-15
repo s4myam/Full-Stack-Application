@@ -19,19 +19,40 @@ router= APIRouter(
 
 def get_session_id(session_id: Optional[str]= Cookie(None)):
     if not session_id :
-        raise HTTPException(status_code=401, detail="Session ID not found!")
         session_id= str(uuid.uuid4())
-        return session_id
-
+    return session_id
 
 @router.post("/create", response_model=StoryJobResponse)
 def create_story(
-     request:CreateStoryRequest,
-     background_tasks: str= Depends(get_session_id),
-     db : Session= Depends(get_db)
+    request: CreateStoryRequest,
+    response: Response,                     # inject Response
+    session_id: str = Depends(get_session_id),  #  get session_id
+    db: Session = Depends(get_db)
 ):
-     
-    response.set_cookie(key="session_id",value=session_id, httponly=True)    
-        
+    # Set cookie
+    response.set_cookie(
+        key="session_id",
+        value=session_id,
+        httponly=True
+    )
+
+    job_id = str(uuid.uuid4())
+
+    job = StoryJob(
+        job_id=job_id,
+        session_id=session_id,
+        theme=request.theme,
+        status="pending"
+    )
+
+    db.add(job)
+    db.commit()
+
+    return StoryJobResponse(
+        job_id=job_id,
+        status="pending"
+    )
+
+
         
     
