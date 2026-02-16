@@ -2,14 +2,15 @@ from sqlalchemy import Column, Integer, String, DateTime,Boolean,ForeignKey, JSO
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship 
 
-from backend.database.database import Base
+from database.database import Base
 
 class Story(Base):
-    __table__name="Stories"
+    __tablename__="stories"
     
     id = Column(Integer,primary_key=True, index=True)
     title=Column(String, index=True)
     session_id= Column(String, index=True)
+    created_at=Column(DateTime(timezone=True), server_default=func.now())
     
     nodes= relationship("StoryNode", back_populates="story")
     

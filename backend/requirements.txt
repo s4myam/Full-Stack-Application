@@ -1,7 +1,9 @@
 fastapi[all]
 langchain
+langchain-ollama
 langchain-openai
 pydantic
+pydantic-settings
 uvicorn
 psycopg2-binary
 python-dotenv

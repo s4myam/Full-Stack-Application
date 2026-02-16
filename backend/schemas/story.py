@@ -2,6 +2,10 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict
 from datetime import datetime
 
+class CreateStoryRequest(BaseModel):
+    theme: str
+    
+    
 class StoryOptionsSchema(BaseModel):
     text:str
     node_id:Optional[int]=None
@@ -29,6 +33,9 @@ class StoryBase(BaseModel):
     
     class Config:
         from_attributes= True
+        
+    class CreateStoryRequest(BaseModel):
+      theme: str
         
 
 class CompleteStoryResponse(StoryBase):
